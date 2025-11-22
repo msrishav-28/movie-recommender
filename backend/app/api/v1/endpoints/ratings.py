@@ -239,7 +239,7 @@ async def like_review(
     return {"status": "liked"}
 
 
-@router.delete("/rating/{rating_id}")
+@router.delete("/{rating_id}")
 async def delete_rating(
     rating_id: int,
     user: User = Depends(get_current_active_user),

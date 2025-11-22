@@ -137,6 +137,8 @@ class Settings(BaseSettings):
     REC_CONTEXT_WEIGHT: float = 0.05
     REC_DIVERSITY_LAMBDA: float = 0.7
     REC_CACHE_TTL: int = 3600
+    GNN_EMBEDDING_DIM: int = 128
+    LLM_EXPLANATIONS_ENABLED: bool = True
     
     # Aesthetic Search
     AESTHETIC_FRAMES_PER_MOVIE: int = 15

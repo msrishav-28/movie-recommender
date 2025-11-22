@@ -50,36 +50,36 @@ async def search_by_aesthetic(
     - **top_k**: Number of results (default: 20)
     - **min_score**: Minimum similarity score 0-1 (default: 0.3)
     """
-    
-    # TODO: Implement actual CLIP-based search
-    # from app.ml.semantic_search.clip_engine import get_aesthetic_search_engine
-    # engine = get_aesthetic_search_engine()
-    # results = await engine.search_by_aesthetic(query, top_k=top_k, min_score=min_score)
-    
-    # Placeholder response
     import time
+    from app.ml.semantic_search.clip_engine import get_aesthetic_search_engine
+    
     start_time = time.time()
+    
+    engine = get_aesthetic_search_engine()
+    search_results = await engine.search_by_aesthetic(
+        query=query,
+        filters=None,
+        top_k=top_k,
+        min_score=min_score
+    )
     
     results = [
         AestheticSearchResult(
-            movie_id=1,
-            score=0.89,
-            num_matching_frames=8,
+            movie_id=result.movie_id,
+            score=result.score,
+            num_matching_frames=len(result.matching_frames),
             best_frames=[
                 {
-                    "frame_number": 5,
-                    "timestamp": 15,
-                    "score": 0.92,
-                    "frame_path": "/frames/movie1_frame5.jpg"
+                    "frame_number": frame.frame_number,
+                    "timestamp": frame.timestamp,
+                    "score": frame.score,
+                    "frame_path": frame.frame_path
                 }
+                for frame in result.matching_frames[:3]
             ],
-            visual_summary={
-                "dominant_aesthetic": "rain_urban_night",
-                "color_palette": ["#FF1493", "#00CED1", "#191970"],
-                "visual_elements": ["rain", "neon", "urban"],
-                "confidence": 0.89
-            }
+            visual_summary=result.visual_summary
         )
+        for result in search_results
     ]
     
     processing_time = (time.time() - start_time) * 1000
@@ -104,13 +104,19 @@ async def search_by_color_palette(
     - **tolerance**: Color matching tolerance 0-1
     - **top_k**: Number of results
     """
+    from app.ml.semantic_search.clip_engine import get_aesthetic_search_engine
     
-    # TODO: Implement color palette search
-    # from app.ml.semantic_search.clip_engine import get_aesthetic_search_engine
-    # engine = get_aesthetic_search_engine()
-    # results = await engine.search_by_color_palette(colors, tolerance, top_k)
+    engine = get_aesthetic_search_engine()
+    results = await engine.search_by_color_palette(
+        colors=colors,
+        tolerance=tolerance,
+        top_k=top_k
+    )
     
-    return {"results": [], "colors": colors}
+    return {
+        "results": [result.to_dict() for result in results],
+        "colors": colors
+    }
 
 
 @router.post("/by-image")
@@ -125,12 +131,18 @@ async def search_by_reference_image(
     - **top_k**: Number of results
     """
     
-    # TODO: Implement image similarity search
-    # from app.ml.semantic_search.clip_engine import get_aesthetic_search_engine
-    # engine = get_aesthetic_search_engine()
-    # results = await engine.search_by_reference_image(image_path, top_k)
+    from app.ml.semantic_search.clip_engine import get_aesthetic_search_engine
     
-    return {"results": [], "image_url": image_url}
+    engine = get_aesthetic_search_engine()
+    results = await engine.search_by_reference_image(
+        image_path=image_url,
+        top_k=top_k
+    )
+    
+    return {
+        "results": [result.to_dict() for result in results],
+        "image_url": image_url
+    }
 
 
 @router.get("/examples")

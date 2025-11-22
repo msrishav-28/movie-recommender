@@ -11,7 +11,8 @@ from app.api.v1.endpoints import (
     recommendations,
     aesthetic_search,
     ratings,
-    watchlist
+    watchlist,
+    streaming,
 )
 
 api_router = APIRouter()
@@ -24,3 +25,4 @@ api_router.include_router(recommendations.router, prefix="/recommendations", tag
 api_router.include_router(aesthetic_search.router, prefix="/aesthetic-search", tags=["Aesthetic Search"])
 api_router.include_router(ratings.router, prefix="/ratings", tags=["Ratings & Reviews"])
 api_router.include_router(watchlist.router, prefix="/watchlist", tags=["Watchlist"])
+api_router.include_router(streaming.router, prefix="/streaming", tags=["Streaming"])

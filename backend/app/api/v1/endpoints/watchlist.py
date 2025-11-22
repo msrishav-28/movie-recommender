@@ -309,3 +309,118 @@ async def add_to_list(
     await db.commit()
     
     return {"status": "added", "position": next_position}
+
+
+@router.delete("/lists/{list_id}")
+async def delete_list(
+    list_id: int,
+    user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Delete a custom list."""
+    
+    result = await db.execute(
+        select(UserList).where(
+            UserList.id == list_id,
+            UserList.user_id == user.id
+        )
+    )
+    user_list = result.scalar_one_or_none()
+    
+    if not user_list:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="List not found"
+        )
+    
+    await db.delete(user_list)
+    await db.commit()
+    
+    return {"status": "deleted"}
+
+
+@router.get("/stats")
+async def get_watchlist_stats(
+    user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Get watchlist statistics."""
+    
+    result = await db.execute(
+        select(WatchlistItem).where(WatchlistItem.user_id == user.id)
+    )
+    items = result.scalars().all()
+    
+    total = len(items)
+    watched = sum(1 for item in items if item.is_watched)
+    unwatched = total - watched
+    avg_priority = sum(item.priority for item in items) / total if total > 0 else 0
+    
+    return {
+        "total_items": total,
+        "watched": watched,
+        "unwatched": unwatched,
+        "avg_priority": round(avg_priority, 2),
+        "genre_distribution": {},
+        "decade_distribution": {}
+    }
+
+
+@router.get("/check/{movie_id}")
+async def check_in_watchlist(
+    movie_id: int,
+    user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Check if a movie is in the watchlist."""
+    
+    result = await db.execute(
+        select(WatchlistItem).where(
+            WatchlistItem.user_id == user.id,
+            WatchlistItem.movie_id == movie_id
+        )
+    )
+    item = result.scalar_one_or_none()
+    
+    return {"in_watchlist": item is not None}
+
+
+@router.post("/bulk")
+async def bulk_watchlist_operation(
+    movie_ids: List[int],
+    operation: str = "add",
+    user: User = Depends(get_current_active_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Bulk add/remove/mark_watched movies."""
+    
+    success = 0
+    failed = 0
+    
+    for movie_id in movie_ids:
+        try:
+            if operation == "add":
+                item = WatchlistItem(
+                    user_id=user.id,
+                    movie_id=movie_id,
+                    priority=5
+                )
+                db.add(item)
+                success += 1
+            elif operation == "remove":
+                result = await db.execute(
+                    select(WatchlistItem).where(
+                        WatchlistItem.user_id == user.id,
+                        WatchlistItem.movie_id == movie_id
+                    )
+                )
+                item = result.scalar_one_or_none()
+                if item:
+                    await db.delete(item)
+                    success += 1
+        except Exception:
+            failed += 1
+    
+    await db.commit()
+    
+    return {"success": success, "failed": failed}

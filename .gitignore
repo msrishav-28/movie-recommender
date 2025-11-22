@@ -1,0 +1,68 @@
+
+
+# Dependencies
+node_modules/
+*.egg-info/
+dist/
+build/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv
+pip-log.txt
+pip-delete-this-directory.txt
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-workspace
+*.sublime-project
+.history/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Build and dist
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+
+# Testing
+.coverage
+.pytest_cache/
+.nyc_output/
+coverage/
+htmlcov/
+.jest_cache/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Codacy and AI rules
+.github/instructions/
+.github/codacy.instructions.md
