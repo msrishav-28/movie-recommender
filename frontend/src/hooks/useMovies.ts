@@ -43,6 +43,21 @@ export function useTrendingMovies(page: number = 1, pageSize: number = 24) {
   });
 }
 
+export function useInfiniteTrendingMovies(pageSize: number = 24) {
+  return useInfiniteQuery({
+    queryKey: [QUERY_KEYS.TRENDING, 'infinite'],
+    queryFn: ({ pageParam = 1 }) => movieService.getTrending(pageParam, pageSize),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.page < lastPage.total_pages) {
+        return lastPage.page + 1;
+      }
+      return undefined;
+    },
+    initialPageParam: 1,
+    staleTime: CACHE_DURATION.SHORT * 1000,
+  });
+}
+
 export function usePopularMovies(page: number = 1, pageSize: number = 24) {
   return useQuery({
     queryKey: [QUERY_KEYS.POPULAR, page],
@@ -55,6 +70,21 @@ export function useTopRatedMovies(page: number = 1, pageSize: number = 24) {
   return useQuery({
     queryKey: ['top-rated', page],
     queryFn: () => movieService.getTopRated(page, pageSize),
+    staleTime: CACHE_DURATION.LONG * 1000,
+  });
+}
+
+export function useInfiniteTopRatedMovies(pageSize: number = 24) {
+  return useInfiniteQuery({
+    queryKey: ['top-rated', 'infinite'],
+    queryFn: ({ pageParam = 1 }) => movieService.getTopRated(pageParam, pageSize),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.page < lastPage.total_pages) {
+        return lastPage.page + 1;
+      }
+      return undefined;
+    },
+    initialPageParam: 1,
     staleTime: CACHE_DURATION.LONG * 1000,
   });
 }

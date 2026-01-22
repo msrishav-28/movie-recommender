@@ -32,10 +32,10 @@ export function Tooltip({ content, children, position = 'top', delay = 300 }: To
   };
 
   const arrows = {
-    top: 'top-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-b-transparent border-t-surface',
-    bottom: 'bottom-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-t-transparent border-b-surface',
-    left: 'left-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-r-transparent border-l-surface',
-    right: 'right-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-l-transparent border-r-surface',
+    top: 'top-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-b-transparent border-t-void-deep',
+    bottom: 'bottom-full left-1/2 -translate-x-1/2 border-l-transparent border-r-transparent border-t-transparent border-b-void-deep',
+    left: 'left-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-r-transparent border-l-void-deep',
+    right: 'right-full top-1/2 -translate-y-1/2 border-t-transparent border-b-transparent border-l-transparent border-r-void-deep',
   };
 
   return (
@@ -44,7 +44,7 @@ export function Tooltip({ content, children, position = 'top', delay = 300 }: To
       {isVisible && (
         <div
           className={cn(
-            'absolute z-tooltip px-3 py-2 rounded-md bg-surface border border-border shadow-xl text-sm whitespace-nowrap animate-fade-in',
+            'absolute z-[300] px-3 py-2 rounded-md bg-void-deep border border-white/10 shadow-xl text-sm whitespace-nowrap animate-fade-in',
             positions[position]
           )}
         >

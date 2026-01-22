@@ -24,6 +24,7 @@ export interface Rating {
   cinematography_rating?: number;
   soundtrack_rating?: number;
   created_at: string;
+  movie?: import('@/types').Movie;
 }
 
 export interface CreateReviewRequest {
@@ -56,26 +57,23 @@ export const ratingService = {
    * Rate a movie (create or update rating)
    */
   async rateMovie(data: CreateRatingRequest): Promise<Rating> {
-    const response = await apiClient.post('/ratings/rate', data);
-    return response.data;
+    return await apiClient.post<Rating>('/ratings/rate', data);
   },
 
   /**
    * Get current user's ratings
    */
   async getMyRatings(page: number = 1, pageSize: number = 20): Promise<Rating[]> {
-    const response = await apiClient.get('/ratings/my-ratings', {
+    return await apiClient.get<Rating[]>('/ratings/my-ratings', {
       params: { page, page_size: pageSize },
     });
-    return response.data;
   },
 
   /**
    * Create a review for a movie
    */
   async createReview(data: CreateReviewRequest): Promise<Review> {
-    const response = await apiClient.post('/ratings/review', data);
-    return response.data;
+    return await apiClient.post<Review>('/ratings/review', data);
   },
 
   /**
@@ -86,10 +84,9 @@ export const ratingService = {
     page: number = 1,
     pageSize: number = 20
   ): Promise<Review[]> {
-    const response = await apiClient.get(`/ratings/movie/${movieId}/reviews`, {
+    return await apiClient.get<Review[]>(`/ratings/movie/${movieId}/reviews`, {
       params: { page, page_size: pageSize },
     });
-    return response.data;
   },
 
   /**

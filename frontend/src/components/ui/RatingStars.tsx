@@ -67,12 +67,12 @@ export function RatingStars({
             >
               {isPartial ? (
                 <div className="relative">
-                  <Star className={cn(sizes[size], 'text-text-tertiary')} />
+                  <Star className={cn(sizes[size], 'text-white/40')} />
                   <div
                     className="absolute inset-0 overflow-hidden"
                     style={{ width: `${partialPercent}%` }}
                   >
-                    <Star className={cn(sizes[size], 'fill-brand-tertiary text-brand-tertiary')} />
+                    <Star className={cn(sizes[size], 'fill-cinema-gold text-cinema-gold')} />
                   </div>
                 </div>
               ) : (
@@ -80,8 +80,8 @@ export function RatingStars({
                   className={cn(
                     sizes[size],
                     isFilled
-                      ? 'fill-brand-tertiary text-brand-tertiary'
-                      : 'text-text-tertiary'
+                      ? 'fill-cinema-gold text-cinema-gold'
+                      : 'text-white/40'
                   )}
                 />
               )}

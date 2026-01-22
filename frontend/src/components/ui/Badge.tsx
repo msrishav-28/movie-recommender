@@ -8,13 +8,13 @@ export interface BadgeProps extends HTMLAttributes<HTMLDivElement> {
 
 export function Badge({ className, variant = 'default', size = 'md', ...props }: BadgeProps) {
   const variants = {
-    default: 'bg-glass-medium text-text-primary',
-    primary: 'bg-brand-primary-light text-brand-primary border border-brand-primary',
-    secondary: 'bg-brand-secondary-light text-brand-secondary border border-brand-secondary',
-    success: 'bg-semantic-success-light text-semantic-success border border-semantic-success',
-    warning: 'bg-semantic-warning-light text-semantic-warning border border-semantic-warning',
-    error: 'bg-semantic-error-light text-semantic-error border border-semantic-error',
-    outline: 'border border-border text-text-secondary',
+    default: 'bg-white/5 text-text-primary',
+    primary: 'bg-klein-blue/15 text-klein-blue border border-klein-blue/50',
+    secondary: 'bg-electric-teal/15 text-electric-teal border border-electric-teal/50',
+    success: 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/50',
+    warning: 'bg-amber-500/15 text-amber-400 border border-amber-500/50',
+    error: 'bg-signal-red/15 text-signal-red border border-signal-red/50',
+    outline: 'border border-white/10 text-text-secondary',
   };
 
   const sizes = {

@@ -52,8 +52,8 @@ export interface Movie {
   backdrop_path?: string;
   genres: Genre[];
   vote_average?: number;
-  vote_count: number;
-  popularity: number;
+  vote_count?: number;
+  popularity?: number;
   runtime?: number;
 }
 
@@ -64,6 +64,7 @@ export interface MovieDetail extends Movie {
   original_language: string;
   spoken_languages: string[];
   production_countries: string[];
+  production_companies?: { id: number; name: string; logo_path?: string; origin_country: string }[];
   cast: CastMember[];
   crew: CrewMember[];
   trailer_url?: string;

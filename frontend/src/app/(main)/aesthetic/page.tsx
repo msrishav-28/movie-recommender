@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Tabs } from '@/components/ui/Tabs';
-import { MovieGrid } from '@/components/movie/MovieGrid';
+import { MasonryGrid } from '@/components/ui/MasonryGrid';
 import { aestheticService } from '@/services/aesthetic.service';
 import { useDebounce } from '@/hooks/useDebounce';
 import { VISUAL_TAGS, MOOD_TAGS } from '@/config/constants';
@@ -37,21 +37,21 @@ export default function AestheticSearchPage() {
   // Search by color palette
   const { data: colorResults, isLoading: colorLoading } = useQuery({
     queryKey: ['aesthetic-search', 'colors', selectedColors],
-    queryFn: () => aestheticService.searchByColorPalette(selectedColors),
+    queryFn: () => aestheticService.searchByColor(selectedColors),
     enabled: selectedColors.length > 0,
   });
 
   // Search by visual tags
   const { data: tagResults, isLoading: tagLoading } = useQuery({
     queryKey: ['aesthetic-search', 'tags', selectedTags],
-    queryFn: () => aestheticService.searchByVisualTags(selectedTags),
+    queryFn: () => aestheticService.searchByTags(selectedTags),
     enabled: selectedTags.length > 0,
   });
 
   // Trending searches
   const { data: trendingSearches } = useQuery({
     queryKey: ['aesthetic-search', 'trending'],
-    queryFn: () => aestheticService.getTrendingAestheticSearches(),
+    queryFn: () => aestheticService.getTrendingSearches(),
   });
 
   const handleColorSelect = (color: string) => {
@@ -85,21 +85,25 @@ export default function AestheticSearchPage() {
   const results = getResults();
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-void">
       {/* Hero Section */}
-      <section className="relative bg-gradient-mesh py-20">
-        <div className="container-padding">
-          <div className="max-w-4xl mx-auto text-center space-y-6">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-medium backdrop-blur-md">
-              <Sparkles className="h-5 w-5 text-brand-primary" />
-              <span className="text-sm font-medium">AI-Powered Aesthetic Discovery</span>
+      <section className="relative py-20 overflow-hidden">
+        {/* Cinematic Background Elements */}
+        <div className="absolute inset-0 bg-void/50 backdrop-blur-3xl z-0" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-64 bg-klein-blue/20 blur-[100px] rounded-full opacity-50 pointer-events-none" />
+
+        <div className="container-padding relative z-10">
+          <div className="max-w-4xl mx-auto text-center space-y-8">
+            <div className="inline-flex items-center gap-2 px-6 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md shadow-glow animate-fade-in">
+              <Sparkles className="h-4 w-4 text-klein-blue" />
+              <span className="text-sm font-medium font-mono text-klein-blue tracking-wide uppercase">AI-Powered Discovery</span>
             </div>
 
-            <h1 className="text-5xl md:text-6xl font-bold">
-              Find Movies by <span className="text-brand-primary">Visual Vibe</span>
+            <h1 className="text-5xl md:text-7xl font-bold font-headline leading-tight animate-in fade-in slide-in-from-bottom-4 duration-700 delay-100">
+              Find Movies by <span className="text-transparent bg-clip-text bg-gradient-to-r from-klein-blue to-electric-teal">Visual Vibe</span>
             </h1>
 
-            <p className="text-xl text-text-secondary">
+            <p className="text-xl text-text-secondary font-light max-w-2xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200">
               Search for films using natural language, colors, or visual tags. Discover movies that match your aesthetic.
             </p>
           </div>
@@ -132,7 +136,7 @@ export default function AestheticSearchPage() {
                       <div>
                         <p className="text-sm font-medium mb-3">Trending Searches:</p>
                         <div className="flex flex-wrap gap-2">
-                          {trendingSearches.slice(0, 10).map((search, index) => (
+                          {trendingSearches.slice(0, 10).map((search: string, index: number) => (
                             <button
                               key={index}
                               onClick={() => setSearchQuery(search)}
@@ -150,7 +154,7 @@ export default function AestheticSearchPage() {
               {
                 id: 'colors',
                 label: 'Color Palette',
-                icon: <Palette className="h-5 w-5" />},
+                icon: <Palette className="h-5 w-5" />,
                 content: (
                   <div className="space-y-6">
                     <div>
@@ -160,11 +164,10 @@ export default function AestheticSearchPage() {
                           <button
                             key={color}
                             onClick={() => handleColorSelect(color)}
-                            className={`w-full aspect-square rounded-lg transition-all hover:scale-110 ${
-                              selectedColors.includes(color)
-                                ? 'ring-4 ring-brand-primary ring-offset-2 ring-offset-background'
-                                : ''
-                            }`}
+                            className={`w-full aspect-square rounded-lg transition-all hover:scale-110 ${selectedColors.includes(color)
+                              ? 'ring-4 ring-klein-blue ring-offset-2 ring-offset-background'
+                              : ''
+                              }`}
                             style={{ backgroundColor: color }}
                           />
                         ))}
@@ -186,7 +189,7 @@ export default function AestheticSearchPage() {
                               />
                               <button
                                 onClick={() => handleColorSelect(color)}
-                                className="text-xs hover:text-semantic-error"
+                                className="text-xs hover:text-signal-red"
                               >
                                 ×
                               </button>
@@ -211,7 +214,7 @@ export default function AestheticSearchPage() {
                 icon: <ImageIcon className="h-5 w-5" />,
                 content: (
                   <div className="space-y-6">
-                    <div className="border-2 border-dashed border-border rounded-lg p-12 text-center hover:border-brand-primary transition-colors">
+                    <div className="border-2 border-dashed border-white/10 rounded-lg p-12 text-center hover:border-klein-blue transition-colors">
                       <input
                         type="file"
                         accept="image/*"
@@ -220,14 +223,14 @@ export default function AestheticSearchPage() {
                         id="image-upload"
                       />
                       <label htmlFor="image-upload" className="cursor-pointer">
-                        <ImageIcon className="h-12 w-12 mx-auto mb-4 text-text-tertiary" />
+                        <ImageIcon className="h-12 w-12 mx-auto mb-4 text-white/40" />
                         <p className="text-lg font-medium mb-2">Upload a Reference Image</p>
                         <p className="text-sm text-text-secondary">
                           Upload a screenshot or image to find visually similar movies
                         </p>
-                        <Button variant="primary" className="mt-4" as="span">
+                        <div className="mt-4 bg-klein-blue text-white hover:bg-klein-blue-hover active:bg-klein-blue-active shadow-md hover:shadow-lg h-10 px-6 text-base inline-flex items-center justify-center gap-2 rounded-md font-medium transition-all duration-200">
                           Choose Image
-                        </Button>
+                        </div>
                       </label>
                     </div>
 
@@ -253,11 +256,10 @@ export default function AestheticSearchPage() {
                           <button
                             key={tag}
                             onClick={() => handleTagSelect(tag)}
-                            className={`px-4 py-2 rounded-full transition-all ${
-                              selectedTags.includes(tag)
-                                ? 'bg-brand-primary text-white'
-                                : 'glass-light hover:glass-medium'
-                            }`}
+                            className={`px-4 py-2 rounded-full transition-all ${selectedTags.includes(tag)
+                              ? 'bg-klein-blue text-white'
+                              : 'glass-light hover:glass-medium'
+                              }`}
                           >
                             {tag}
                           </button>
@@ -272,11 +274,10 @@ export default function AestheticSearchPage() {
                           <button
                             key={tag}
                             onClick={() => handleTagSelect(tag)}
-                            className={`px-4 py-2 rounded-full transition-all ${
-                              selectedTags.includes(tag)
-                                ? 'bg-brand-primary text-white'
-                                : 'glass-light hover:glass-medium'
-                            }`}
+                            className={`px-4 py-2 rounded-full transition-all ${selectedTags.includes(tag)
+                              ? 'bg-klein-blue text-white'
+                              : 'glass-light hover:glass-medium'
+                              }`}
                           >
                             {tag}
                           </button>
@@ -310,7 +311,7 @@ export default function AestheticSearchPage() {
       </section>
 
       {/* Results Section */}
-      <section className="section-spacing bg-surface/50">
+      <section className="section-spacing bg-void-deep/50">
         <div className="container-padding">
           {results.length > 0 ? (
             <>
@@ -320,11 +321,11 @@ export default function AestheticSearchPage() {
                   Found {results.length} movies matching your aesthetic
                 </p>
               </div>
-              <MovieGrid movies={results} isLoading={isLoading} size="medium" />
+              <MasonryGrid items={results} />
             </>
           ) : !isLoading && (
             <div className="text-center py-20">
-              <Sparkles className="h-16 w-16 mx-auto mb-4 text-text-tertiary" />
+              <Sparkles className="h-16 w-16 mx-auto mb-4 text-white/40" />
               <h3 className="text-2xl font-bold mb-2">Start Your Aesthetic Search</h3>
               <p className="text-text-secondary">
                 Use any of the search methods above to discover movies by their visual style

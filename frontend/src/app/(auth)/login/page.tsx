@@ -40,11 +40,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-mesh">
-      <div className="w-full max-w-md px-4">
+    <div className="min-h-screen flex items-center justify-center relative">
+      <div className="w-full max-w-md px-4 relative z-10">
         {/* Logo */}
         <Link href="/" className="flex items-center justify-center gap-2 mb-8">
-          <Film className="h-10 w-10 text-brand-primary" />
+          <Film className="h-10 w-10 text-klein-blue" />
           <span className="font-cinematic text-3xl tracking-wider">CINEAESTHETE</span>
         </Link>
 
@@ -79,8 +79,8 @@ export default function LoginPage() {
 
               {/* Error Message */}
               {error && (
-                <div className="p-3 rounded-md bg-semantic-error/10 border border-semantic-error">
-                  <p className="text-sm text-semantic-error">{error}</p>
+                <div className="p-3 rounded-md bg-signal-red/10 border border-signal-red">
+                  <p className="text-sm text-signal-red">{error}</p>
                 </div>
               )}
 
@@ -88,7 +88,7 @@ export default function LoginPage() {
               <div className="flex justify-end">
                 <Link
                   href="/forgot-password"
-                  className="text-sm text-brand-primary hover:underline"
+                  className="text-sm text-klein-blue hover:underline"
                 >
                   Forgot password?
                 </Link>
@@ -109,18 +109,18 @@ export default function LoginPage() {
               {/* Divider */}
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-border" />
+                  <div className="w-full border-t border-white/10" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-surface text-text-tertiary">or</span>
+                  <span className="px-2 bg-void-deep text-white/40">or</span>
                 </div>
               </div>
 
               {/* Register Link */}
               <div className="text-center">
                 <p className="text-sm text-text-secondary">
-                  Don't have an account?{' '}
-                  <Link href="/register" className="text-brand-primary hover:underline font-medium">
+                  Don&apos;t have an account?{' '}
+                  <Link href="/register" className="text-klein-blue hover:underline font-medium">
                     Sign up
                   </Link>
                 </p>
@@ -131,7 +131,7 @@ export default function LoginPage() {
 
         {/* Back to Home */}
         <div className="mt-6 text-center">
-          <Link href="/" className="text-sm text-text-tertiary hover:text-text-primary transition-colors">
+          <Link href="/" className="text-sm text-white/40 hover:text-text-primary transition-colors">
             ← Back to home
           </Link>
         </div>

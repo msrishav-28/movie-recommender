@@ -1,18 +1,18 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Star, Loader, Trash2 } from 'lucide-react';
+import { Star, Loader } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
+import { MasonryGrid } from '@/components/ui/MasonryGrid';
+import { Dropdown } from '@/components/ui/Dropdown';
 import { ratingService, Rating } from '@/services/rating.service';
-import { formatDate } from '@/lib/utils';
 import { toast } from 'sonner';
 
 export default function MyRatingsPage() {
   const [ratings, setRatings] = useState<Rating[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
+  const [sortBy, setSortBy] = useState<'recent' | 'rating_high' | 'rating_low'>('recent');
 
   useEffect(() => {
     loadRatings();
@@ -31,116 +31,82 @@ export default function MyRatingsPage() {
     }
   };
 
-  const handleDeleteRating = async (ratingId: number) => {
-    if (!confirm('Are you sure you want to delete this rating?')) return;
+  // Sort ratings
+  const sortedRatings = [...ratings].sort((a, b) => {
+    if (sortBy === 'rating_high') return b.overall_rating - a.overall_rating;
+    if (sortBy === 'rating_low') return a.overall_rating - b.overall_rating;
+    return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+  });
 
-    try {
-      await ratingService.deleteRating(ratingId);
-      toast.success('Rating deleted');
-      loadRatings();
-    } catch (error) {
-      toast.error('Failed to delete rating');
-      console.error(error);
-    }
-  };
+  const ratedMovies = sortedRatings.map(r => {
+    if (!r.movie) return undefined;
+
+    // We augment the movie with the user's rating for display purposes if needed
+    // But for now MasonryGrid just takes standard Movie objects.
+    // We could use the matchScore prop to show rating? 
+    // matchScore is usually 0-100. overall_rating is 0-5.
+    // Let's multiply by 20 to map 5 -> 100.
+    return {
+      ...r.movie,
+      match_score: r.overall_rating * 20
+    };
+  }).filter((m): m is NonNullable<typeof m> => m !== undefined);
 
   if (isLoading && page === 1) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader className="h-8 w-8 animate-spin text-brand-primary" />
+        <Loader className="h-8 w-8 animate-spin text-klein-blue" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen section-spacing">
-      <div className="container-padding">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">My Ratings</h1>
-          <p className="text-text-secondary">
-            All movies you've rated ({ratings.length})
-          </p>
-        </div>
-
-        {/* Ratings Grid */}
-        {ratings.length === 0 ? (
-          <Card variant="glass">
-            <CardContent className="p-12 text-center">
-              <Star className="h-16 w-16 text-text-tertiary mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">No ratings yet</h3>
-              <p className="text-text-secondary">
-                Start rating movies to see them here
+    <div className="min-h-screen bg-void">
+      <section className="bg-void/80 border-b border-white/5 backdrop-blur-md sticky top-[64px] z-30 shadow-lg">
+        <div className="container-padding py-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold mb-2 font-headline leading-none">My Ratings</h1>
+              <p className="text-text-secondary font-mono text-sm">
+                {ratings.length} movies evaluated
               </p>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-1 gap-4">
-            {ratings.map((rating) => (
-              <Card key={rating.id} variant="glass">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="flex items-center gap-2">
-                          <Star className="h-6 w-6 fill-brand-tertiary text-brand-tertiary" />
-                          <span className="text-2xl font-bold">
-                            {rating.overall_rating.toFixed(1)}
-                          </span>
-                        </div>
-                        <span className="text-text-tertiary">/</span>
-                        <span className="text-text-tertiary">5.0</span>
-                      </div>
+            </div>
 
-                      <p className="text-sm text-text-tertiary">
-                        Rated {formatDate(rating.created_at, 'short')}
-                      </p>
-
-                      {/* Detailed Ratings */}
-                      {(rating.plot_rating ||
-                        rating.acting_rating ||
-                        rating.cinematography_rating ||
-                        rating.soundtrack_rating) && (
-                        <div className="flex flex-wrap gap-2 mt-4">
-                          {rating.plot_rating && (
-                            <Badge variant="default">
-                              Plot: {rating.plot_rating.toFixed(1)}
-                            </Badge>
-                          )}
-                          {rating.acting_rating && (
-                            <Badge variant="default">
-                              Acting: {rating.acting_rating.toFixed(1)}
-                            </Badge>
-                          )}
-                          {rating.cinematography_rating && (
-                            <Badge variant="default">
-                              Cinematography: {rating.cinematography_rating.toFixed(1)}
-                            </Badge>
-                          )}
-                          {rating.soundtrack_rating && (
-                            <Badge variant="default">
-                              Soundtrack: {rating.soundtrack_rating.toFixed(1)}
-                            </Badge>
-                          )}
-                        </div>
-                      )}
-                    </div>
-
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      icon={<Trash2 className="h-4 w-4" />}
-                      onClick={() => handleDeleteRating(rating.id)}
-                    >
-                      Delete
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            <div className="w-48">
+              <Dropdown
+                label="Sort By"
+                options={[
+                  { value: 'recent', label: 'Most Recent' },
+                  { value: 'rating_high', label: 'Highest Rated' },
+                  { value: 'rating_low', label: 'Lowest Rated' },
+                ]}
+                value={sortBy}
+                onChange={(val) => setSortBy(val as any)}
+              />
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      </section>
+
+      <section className="section-spacing">
+        <div className="container-padding">
+          {ratedMovies.length > 0 ? (
+            // Use MasonryGrid. We pass match_score (mapped from rating) to show it on the card.
+            // MasonryGrid handles objects with match_score.
+            <MasonryGrid items={ratedMovies} />
+          ) : (
+            <Card variant="glass">
+              <CardContent className="p-12 text-center">
+                <Star className="h-16 w-16 text-white/40 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold mb-2">No ratings yet</h3>
+                <p className="text-text-secondary">
+                  Start rating movies to see them here
+                </p>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      </section>
     </div>
   );
 }

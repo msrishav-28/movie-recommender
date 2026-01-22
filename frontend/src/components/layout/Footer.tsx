@@ -31,17 +31,17 @@ export function Footer() {
   };
 
   return (
-    <footer className="border-t border-border bg-surface mt-auto">
+    <footer className="border-t border-white/10 bg-void-deep mt-auto">
       <div className="container-padding py-12 lg:py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
           {/* Logo & Description */}
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <Film className="h-8 w-8 text-brand-primary" />
+              <Film className="h-8 w-8 text-klein-blue" />
               <span className="font-cinematic text-xl tracking-wider">CINEAESTHETE</span>
             </Link>
-            <p className="text-sm text-text-tertiary max-w-xs">
-              Discover movies through aesthetic vibes and visual atmosphere. The world's first
+            <p className="text-sm text-white/40 max-w-xs">
+              Discover movies through aesthetic vibes and visual atmosphere. The world&apos;s first
               AI-powered aesthetic search.
             </p>
           </div>
@@ -55,9 +55,9 @@ export function Footer() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-sm text-text-tertiary hover:text-text-primary transition-colors inline-flex items-center gap-2"
+                      className="text-sm text-white/40 hover:text-text-primary transition-colors inline-flex items-center gap-2"
                     >
-                      {link.icon && <link.icon className="h-4 w-4" />}
+                      {'icon' in link && link.icon && <link.icon className="h-4 w-4" />}
                       {link.label}
                     </Link>
                   </li>
@@ -68,18 +68,18 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-8 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-sm text-text-tertiary">
+        <div className="mt-12 pt-8 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-sm text-white/40">
             © {currentYear} CineAesthete. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            <Link href="/terms" className="text-sm text-text-tertiary hover:text-text-primary transition-colors">
+            <Link href="/terms" className="text-sm text-white/40 hover:text-text-primary transition-colors">
               Terms
             </Link>
-            <Link href="/privacy" className="text-sm text-text-tertiary hover:text-text-primary transition-colors">
+            <Link href="/privacy" className="text-sm text-white/40 hover:text-text-primary transition-colors">
               Privacy
             </Link>
-            <Link href="/cookies" className="text-sm text-text-tertiary hover:text-text-primary transition-colors">
+            <Link href="/cookies" className="text-sm text-white/40 hover:text-text-primary transition-colors">
               Cookies
             </Link>
           </div>

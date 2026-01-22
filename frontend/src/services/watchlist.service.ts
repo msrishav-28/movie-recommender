@@ -23,7 +23,7 @@ export const watchlistService = {
     page: number = 1,
     pageSize: number = 20
   ): Promise<WatchlistResponse> {
-    const response = await apiClient.get('/watchlist', {
+    return await apiClient.get<WatchlistResponse>('/watchlist', {
       params: {
         watched,
         sort_by: sortBy,
@@ -31,15 +31,13 @@ export const watchlistService = {
         page_size: pageSize,
       },
     });
-    return response.data;
   },
 
   /**
    * Add movie to watchlist
    */
   async addToWatchlist(data: WatchlistItemCreate): Promise<WatchlistItem> {
-    const response = await apiClient.post('/watchlist', data);
-    return response.data;
+    return await apiClient.post<WatchlistItem>('/watchlist', data);
   },
 
   /**
@@ -49,8 +47,7 @@ export const watchlistService = {
     itemId: number,
     data: WatchlistItemUpdate
   ): Promise<WatchlistItem> {
-    const response = await apiClient.put(`/watchlist/${itemId}`, data);
-    return response.data;
+    return await apiClient.put<WatchlistItem>(`/watchlist/${itemId}`, data);
   },
 
   /**
@@ -78,8 +75,7 @@ export const watchlistService = {
    * Get watchlist statistics
    */
   async getWatchlistStats(): Promise<WatchlistStats> {
-    const response = await apiClient.get('/watchlist/stats');
-    return response.data;
+    return await apiClient.get<WatchlistStats>('/watchlist/stats');
   },
 
   /**
@@ -87,8 +83,8 @@ export const watchlistService = {
    */
   async isInWatchlist(movieId: number): Promise<boolean> {
     try {
-      const response = await apiClient.get(`/watchlist/check/${movieId}`);
-      return response.data.in_watchlist;
+      const response = await apiClient.get<{ in_watchlist: boolean }>(`/watchlist/check/${movieId}`);
+      return response.in_watchlist;
     } catch (error) {
       return false;
     }
@@ -101,10 +97,9 @@ export const watchlistService = {
     movieIds: number[],
     operation: 'add' | 'remove' | 'mark_watched'
   ): Promise<{ success: number; failed: number }> {
-    const response = await apiClient.post('/watchlist/bulk', {
+    return await apiClient.post<{ success: number; failed: number }>('/watchlist/bulk', {
       movie_ids: movieIds,
       operation,
     });
-    return response.data;
   },
 };

@@ -1,10 +1,23 @@
 'use client';
 
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@radix-ui/react-dialog';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from './Button';
 import type { ReactNode } from 'react';
+
+const Dialog = DialogPrimitive.Root;
+// Radix Dialog Content usually needs Portal, but we'll try basic first or strictly follow existing logic if it was custom
+const DialogContent = DialogPrimitive.Content;
+const DialogTitle = DialogPrimitive.Title;
+const DialogDescription = DialogPrimitive.Description;
+
+const DialogHeader = ({ className, children }: { className?: string; children: ReactNode }) => (
+  <div className={className}>{children}</div>
+);
+const DialogFooter = ({ className, children }: { className?: string; children: ReactNode }) => (
+  <div className={className}>{children}</div>
+);
 
 export interface ModalProps {
   isOpen: boolean;
@@ -39,7 +52,7 @@ export function Modal({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
         className={cn(
-          'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-modal',
+          'fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[210]',
           'w-full glass-heavy backdrop-blur-xl rounded-2xl shadow-2xl',
           'p-6 animate-fade-in',
           sizes[size]
@@ -61,7 +74,7 @@ export function Modal({
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="shrink-0 rounded-md p-2 hover:bg-glass-light transition-colors"
+                className="shrink-0 rounded-md p-2 hover:bg-white/5 transition-colors"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -74,7 +87,7 @@ export function Modal({
 
         {/* Footer */}
         {footer && (
-          <DialogFooter className="flex items-center justify-end gap-3 mt-6 pt-6 border-t border-border">
+          <DialogFooter className="flex items-center justify-end gap-3 mt-6 pt-6 border-t border-white/10">
             {footer}
           </DialogFooter>
         )}
@@ -82,7 +95,7 @@ export function Modal({
 
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-background/80 backdrop-blur-sm z-modal-backdrop"
+        className="fixed inset-0 bg-void/80 backdrop-blur-sm z-[200]"
         onClick={onClose}
       />
     </Dialog>

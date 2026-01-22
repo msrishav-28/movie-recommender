@@ -80,138 +80,145 @@ export default function MyListsPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <Loader className="h-8 w-8 animate-spin text-brand-primary" />
+        <Loader className="h-8 w-8 animate-spin text-klein-blue" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen section-spacing">
-      <div className="container-padding">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-4xl font-bold mb-2">My Lists</h1>
-            <p className="text-text-secondary">
-              Organize movies into custom lists
-            </p>
-          </div>
-          <Button
-            variant="primary"
-            icon={<Plus className="h-5 w-5" />}
-            onClick={() => setShowCreateModal(true)}
-            glow
-          >
-            Create List
-          </Button>
-        </div>
-
-        {/* Lists Grid */}
-        {lists.length === 0 ? (
-          <Card variant="glass">
-            <CardContent className="p-12 text-center">
-              <List className="h-16 w-16 text-text-tertiary mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">No lists yet</h3>
-              <p className="text-text-secondary mb-6">
-                Create your first list to start organizing movies
-              </p>
-              <Button
-                variant="primary"
-                icon={<Plus className="h-5 w-5" />}
-                onClick={() => setShowCreateModal(true)}
-              >
-                Create Your First List
-              </Button>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {lists.map((list) => (
-              <Card key={list.id} variant="glass">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <h3 className="text-xl font-bold mb-1">{list.name}</h3>
-                      {list.description && (
-                        <p className="text-sm text-text-tertiary">{list.description}</p>
-                      )}
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      icon={<Trash2 className="h-4 w-4" />}
-                      onClick={() => handleDeleteList(list.id)}
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between text-sm text-text-secondary">
-                    <span>{list.is_public ? 'Public' : 'Private'}</span>
-                    <span>{formatDate(list.created_at, 'short')}</span>
-                  </div>
-
-                  {list.likes_count > 0 && (
-                    <p className="text-sm text-brand-primary mt-2">
-                      {list.likes_count} likes
-                    </p>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
-
-        {/* Create List Modal */}
-        <Modal
-          isOpen={showCreateModal}
-          onClose={() => setShowCreateModal(false)}
-          title="Create New List"
-        >
-          <div className="space-y-4">
-            <Input
-              label="List Name"
-              placeholder="e.g., Favorite Thrillers"
-              value={newListName}
-              onChange={(e) => setNewListName(e.target.value)}
-              required
-            />
-
+    <div className="min-h-screen bg-void">
+      {/* Header */}
+      <section className="bg-void/80 border-b border-white/5 backdrop-blur-md sticky top-[64px] z-30 shadow-lg">
+        <div className="container-padding py-6">
+          <div className="flex items-center justify-between">
             <div>
-              <label className="block text-sm font-medium mb-2">
-                Description (Optional)
-              </label>
-              <textarea
-                className="w-full px-4 py-3 bg-surface/50 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-text-primary placeholder-text-tertiary min-h-[100px] resize-y"
-                placeholder="Describe your list..."
-                value={newListDesc}
-                onChange={(e) => setNewListDesc(e.target.value)}
-              />
+              <h1 className="text-3xl md:text-4xl font-bold mb-2 font-headline leading-none">My Lists</h1>
+              <p className="text-text-secondary font-mono text-sm">
+                Organize movies into custom lists
+              </p>
             </div>
-
-            <Checkbox
-              label="Make this list public"
-              checked={isPublic}
-              onChange={setIsPublic}
-            />
-
-            <div className="flex justify-end gap-3 pt-4">
-              <Button
-                variant="ghost"
-                onClick={() => setShowCreateModal(false)}
-                disabled={isCreating}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="primary"
-                onClick={handleCreateList}
-                loading={isCreating}
-              >
-                Create List
-              </Button>
-            </div>
+            <Button
+              variant="primary"
+              icon={<Plus className="h-5 w-5" />}
+              onClick={() => setShowCreateModal(true)}
+              glow
+            >
+              Create List
+            </Button>
           </div>
-        </Modal>
-      </div>
+        </div>
+      </section>
+
+      <section className="section-spacing">
+        <div className="container-padding">
+
+          {/* Lists Grid */}
+          {lists.length === 0 ? (
+            <Card variant="glass">
+              <CardContent className="p-12 text-center">
+                <List className="h-16 w-16 text-white/40 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold mb-2">No lists yet</h3>
+                <p className="text-text-secondary mb-6">
+                  Create your first list to start organizing movies
+                </p>
+                <Button
+                  variant="primary"
+                  icon={<Plus className="h-5 w-5" />}
+                  onClick={() => setShowCreateModal(true)}
+                >
+                  Create Your First List
+                </Button>
+              </CardContent>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {lists.map((list) => (
+                <Card key={list.id} variant="glass">
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex-1">
+                        <h3 className="text-xl font-bold mb-1">{list.name}</h3>
+                        {list.description && (
+                          <p className="text-sm text-white/40">{list.description}</p>
+                        )}
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        icon={<Trash2 className="h-4 w-4" />}
+                        onClick={() => handleDeleteList(list.id)}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between text-sm text-text-secondary">
+                      <span>{list.is_public ? 'Public' : 'Private'}</span>
+                      <span>{formatDate(list.created_at, 'short')}</span>
+                    </div>
+
+                    {list.likes_count > 0 && (
+                      <p className="text-sm text-klein-blue mt-2">
+                        {list.likes_count} likes
+                      </p>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          )}
+
+          {/* Create List Modal */}
+          <Modal
+            isOpen={showCreateModal}
+            onClose={() => setShowCreateModal(false)}
+            title="Create New List"
+          >
+            <div className="space-y-4">
+              <Input
+                label="List Name"
+                placeholder="e.g., Favorite Thrillers"
+                value={newListName}
+                onChange={(e) => setNewListName(e.target.value)}
+                required
+              />
+
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Description (Optional)
+                </label>
+                <textarea
+                  className="w-full px-4 py-3 bg-void-deep/50 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-klein-blue/50 text-text-primary placeholder:text-white/40 min-h-[100px] resize-y"
+                  placeholder="Describe your list..."
+                  value={newListDesc}
+                  onChange={(e) => setNewListDesc(e.target.value)}
+                />
+              </div>
+
+              <Checkbox
+                label="Make this list public"
+                checked={isPublic}
+                onChange={setIsPublic}
+              />
+
+              <div className="flex justify-end gap-3 pt-4">
+                <Button
+                  variant="ghost"
+                  onClick={() => setShowCreateModal(false)}
+                  disabled={isCreating}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="primary"
+                  onClick={handleCreateList}
+                  loading={isCreating}
+                >
+                  Create List
+                </Button>
+              </div>
+            </div>
+          </Modal>
+        </div>
+      </section>
     </div>
   );
 }

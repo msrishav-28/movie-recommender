@@ -26,10 +26,10 @@ export function Progress({
   };
 
   const variants = {
-    default: 'bg-brand-primary',
-    success: 'bg-semantic-success',
-    warning: 'bg-semantic-warning',
-    error: 'bg-semantic-error',
+    default: 'bg-klein-blue',
+    success: 'bg-emerald-500',
+    warning: 'bg-amber-500',
+    error: 'bg-signal-red',
   };
 
   return (
@@ -43,7 +43,7 @@ export function Progress({
         </div>
       )}
 
-      <div className={cn('w-full rounded-full bg-glass-medium overflow-hidden', sizes[size])}>
+      <div className={cn('w-full rounded-full bg-white/10 overflow-hidden', sizes[size])}>
         <div
           className={cn('h-full transition-all duration-300', variants[variant])}
           style={{ width: `${percentage}%` }}

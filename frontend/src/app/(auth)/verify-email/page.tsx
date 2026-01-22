@@ -7,7 +7,9 @@ import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { apiClient } from '@/services/api.client';
 
-export default function VerifyEmailPage() {
+import { Suspense } from 'react';
+
+function VerifyEmailContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
@@ -15,7 +17,7 @@ export default function VerifyEmailPage() {
 
   useEffect(() => {
     const token = searchParams.get('token');
-    
+
     if (!token) {
       setStatus('error');
       setMessage('Invalid verification link');
@@ -37,40 +39,57 @@ export default function VerifyEmailPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
-      <Card variant="glass" className="max-w-md w-full">
-        <CardContent className="p-8 text-center">
-          {status === 'loading' && (
-            <>
-              <Loader className="h-16 w-16 animate-spin text-brand-primary mx-auto mb-4" />
-              <h1 className="text-2xl font-bold mb-2">Verifying Email...</h1>
-              <p className="text-text-secondary">Please wait while we verify your email address</p>
-            </>
-          )}
+    <Card variant="glass" className="max-w-md w-full">
+      <CardContent className="p-8 text-center">
+        {status === 'loading' && (
+          <>
+            <Loader className="h-16 w-16 animate-spin text-klein-blue mx-auto mb-4" />
+            <h1 className="text-2xl font-bold mb-2">Verifying Email...</h1>
+            <p className="text-text-secondary">Please wait while we verify your email address</p>
+          </>
+        )}
 
-          {status === 'success' && (
-            <>
-              <CheckCircle className="h-16 w-16 text-semantic-success mx-auto mb-4" />
-              <h1 className="text-2xl font-bold mb-2">Email Verified!</h1>
-              <p className="text-text-secondary mb-6">{message}</p>
-              <Button variant="primary" onClick={() => router.push('/login')} glow>
-                Continue to Login
-              </Button>
-            </>
-          )}
+        {status === 'success' && (
+          <>
+            <CheckCircle className="h-16 w-16 text-emerald-500 mx-auto mb-4" />
+            <h1 className="text-2xl font-bold mb-2">Email Verified!</h1>
+            <p className="text-text-secondary mb-6">{message}</p>
+            <Button variant="primary" onClick={() => router.push('/login')} glow>
+              Continue to Login
+            </Button>
+          </>
+        )}
 
-          {status === 'error' && (
-            <>
-              <XCircle className="h-16 w-16 text-semantic-error mx-auto mb-4" />
-              <h1 className="text-2xl font-bold mb-2">Verification Failed</h1>
-              <p className="text-text-secondary mb-6">{message}</p>
-              <Button variant="outline" onClick={() => router.push('/login')}>
-                Back to Login
-              </Button>
-            </>
-          )}
-        </CardContent>
-      </Card>
+        {status === 'error' && (
+          <>
+            <XCircle className="h-16 w-16 text-signal-red mx-auto mb-4" />
+            <h1 className="text-2xl font-bold mb-2">Verification Failed</h1>
+            <p className="text-text-secondary mb-6">{message}</p>
+            <Button variant="outline" onClick={() => router.push('/login')}>
+              Back to Login
+            </Button>
+          </>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <div className="min-h-screen flex items-center justify-center p-4 relative">
+      <div className="relative z-10 w-full max-w-md">
+        <Suspense fallback={
+          <Card variant="glass" className="max-w-md w-full">
+            <CardContent className="p-8 text-center">
+              <Loader className="h-16 w-16 animate-spin text-klein-blue mx-auto mb-4" />
+              <p>Loading...</p>
+            </CardContent>
+          </Card>
+        }>
+          <VerifyEmailContent />
+        </Suspense>
+      </div>
     </div>
   );
 }

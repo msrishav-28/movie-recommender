@@ -31,16 +31,14 @@ export const listService = {
    * Create a new custom list
    */
   async createList(data: CreateListRequest): Promise<UserList> {
-    const response = await apiClient.post('/watchlist/lists', data);
-    return response.data;
+    return await apiClient.post<UserList>('/watchlist/lists', data);
   },
 
   /**
    * Get current user's lists
    */
   async getMyLists(): Promise<UserList[]> {
-    const response = await apiClient.get('/watchlist/lists');
-    return response.data;
+    return await apiClient.get<UserList[]>('/watchlist/lists');
   },
 
   /**

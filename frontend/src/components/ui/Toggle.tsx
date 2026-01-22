@@ -40,15 +40,15 @@ export function Toggle({ checked = false, onChange, label, disabled, size = 'md'
         onClick={() => !disabled && onChange?.(!checked)}
         disabled={disabled}
         className={cn(
-          'relative rounded-full transition-colors',
+          'relative rounded-full transition-all duration-300',
           sizeConfig.track,
-          checked ? 'bg-brand-primary' : 'bg-glass-medium',
-          disabled && 'cursor-not-allowed'
+          checked ? 'bg-electric-teal shadow-[0_0_15px_rgba(0,217,255,0.4)]' : 'bg-white/10 border border-white/10',
+          disabled && 'cursor-not-allowed opacity-50'
         )}
       >
         <span
           className={cn(
-            'absolute left-0.5 top-1/2 -translate-y-1/2 rounded-full bg-white shadow-md transition-transform',
+            'absolute left-0.5 top-1/2 -translate-y-1/2 rounded-full bg-white shadow-md transition-transform duration-300',
             sizeConfig.thumb,
             checked && sizeConfig.translate
           )}

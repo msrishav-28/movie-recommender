@@ -16,7 +16,7 @@ export default function ForgotPasswordPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
       // TODO: Implement forgot password API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -30,8 +30,8 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-mesh">
-      <div className="w-full max-w-md px-4">
+    <div className="min-h-screen flex items-center justify-center relative">
+      <div className="w-full max-w-md px-4 relative z-10">
         <Card variant="glass" className="backdrop-blur-xl">
           <CardHeader>
             <CardTitle>Forgot Password</CardTitle>
@@ -66,7 +66,7 @@ export default function ForgotPasswordPage() {
                 </Button>
 
                 <div className="text-center">
-                  <Link href="/login" className="text-sm text-brand-primary hover:underline inline-flex items-center gap-1">
+                  <Link href="/login" className="text-sm text-klein-blue hover:underline inline-flex items-center gap-1">
                     <ArrowLeft className="h-4 w-4" />
                     Back to Login
                   </Link>
@@ -74,9 +74,9 @@ export default function ForgotPasswordPage() {
               </form>
             ) : (
               <div className="text-center space-y-4">
-                <Mail className="h-16 w-16 mx-auto text-brand-primary" />
+                <Mail className="h-16 w-16 mx-auto text-klein-blue" />
                 <p className="text-text-secondary">
-                  We've sent a password reset link to <strong>{email}</strong>
+                  We&apos;ve sent a password reset link to <strong>{email}</strong>
                 </p>
                 <Link href="/login">
                   <Button variant="primary" size="lg" fullWidth>

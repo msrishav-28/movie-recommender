@@ -58,13 +58,13 @@ export function Dropdown({
           onClick={() => !disabled && setIsOpen(!isOpen)}
           disabled={disabled}
           className={cn(
-            'w-full flex items-center justify-between rounded-md border border-border bg-surface px-4 py-2.5 text-left transition-colors',
-            'hover:bg-glass-light focus:border-brand-secondary focus:outline-none focus:ring-2 focus:ring-brand-secondary/20',
+            'w-full flex items-center justify-between rounded-md border border-white/10 bg-void-deep px-4 py-2.5 text-left transition-colors',
+            'hover:bg-white/5 focus:border-electric-teal focus:outline-none focus:ring-2 focus:ring-electric-teal/20',
             'disabled:cursor-not-allowed disabled:opacity-50',
-            error && 'border-semantic-error'
+            error && 'border-signal-red'
           )}
         >
-          <span className={cn('flex items-center gap-2', !selectedOption && 'text-text-tertiary')}>
+          <span className={cn('flex items-center gap-2', !selectedOption && 'text-white/40')}>
             {selectedOption?.icon}
             {selectedOption?.label || placeholder}
           </span>
@@ -72,7 +72,7 @@ export function Dropdown({
         </button>
 
         {isOpen && (
-          <div className="absolute z-dropdown mt-2 w-full rounded-md glass-heavy backdrop-blur-xl border border-border shadow-2xl animate-fade-in">
+          <div className="absolute z-50 mt-2 w-full rounded-md glass-heavy border border-white/10 shadow-2xl animate-fade-in">
             <div className="max-h-60 overflow-y-auto p-2">
               {options.map((option) => (
                 <button
@@ -86,8 +86,8 @@ export function Dropdown({
                   disabled={option.disabled}
                   className={cn(
                     'w-full flex items-center gap-2 rounded-md px-3 py-2 text-left transition-colors',
-                    'hover:bg-glass-light',
-                    option.value === value && 'bg-brand-primary-light text-brand-primary',
+                    'hover:bg-white/5',
+                    option.value === value && 'bg-klein-blue/15 text-klein-blue',
                     option.disabled && 'opacity-50 cursor-not-allowed'
                   )}
                 >
@@ -101,7 +101,7 @@ export function Dropdown({
       </div>
 
       {error && (
-        <p className="text-xs text-semantic-error">{error}</p>
+        <p className="text-xs text-signal-red">{error}</p>
       )}
     </div>
   );

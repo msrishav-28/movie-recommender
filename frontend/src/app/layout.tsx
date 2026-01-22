@@ -1,61 +1,49 @@
 import type { Metadata, Viewport } from 'next';
-import { Inter, JetBrains_Mono } from 'next/font/google';
-import localFont from 'next/font/local';
+import { Manrope, Bebas_Neue, JetBrains_Mono, Inter } from 'next/font/google';
 import './globals.css';
 import { Providers } from '@/components/providers';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { Dock } from '@/components/layout/Dock'; // Imported Dock
 import { Toaster } from 'sonner';
+import SmoothScrolling from '@/components/ui/SmoothScrolling';
+import dynamic from 'next/dynamic';
+
+const CinematicBackground = dynamic(() => import('@/components/Three/CinematicBackground'), {
+  ssr: false,
+});
+
+const CustomCursor = dynamic(() => import('@/components/ui/CustomCursor'), {
+  ssr: false,
+});
 
 // Font Configuration
-const inter = Inter({
+const manrope = Manrope({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-manrope',
   display: 'swap',
-  preload: true,
-  fallback: ['system-ui', 'arial'],
+});
+
+const bebasNeue = Bebas_Neue({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-bebas',
+  display: 'swap',
 });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   variable: '--font-jetbrains',
   display: 'swap',
-  weight: ['400', '500', '600', '700'],
 });
 
-const sfPro = localFont({
-  src: [
-    {
-      path: '../fonts/SF-Pro-Display-Regular.woff2',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: '../fonts/SF-Pro-Display-Medium.woff2',
-      weight: '500',
-      style: 'normal',
-    },
-    {
-      path: '../fonts/SF-Pro-Display-Semibold.woff2',
-      weight: '600',
-      style: 'normal',
-    },
-    {
-      path: '../fonts/SF-Pro-Display-Bold.woff2',
-      weight: '700',
-      style: 'normal',
-    },
-  ],
-  variable: '--font-sf-pro',
+// Using Inter as fallback/body if Satoshi is not available via Google Fonts
+// In a real scenario, we'd setup local font for Satoshi. 
+// For now, mapping 'Satoshi' variable to Inter for safety.
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-satoshi',
   display: 'swap',
-  fallback: ['Inter', 'system-ui'],
-});
-
-const bebasNeue = localFont({
-  src: '../fonts/BebasNeue-Regular.woff2',
-  variable: '--font-bebas',
-  display: 'swap',
-  weight: '400',
 });
 
 export const viewport: Viewport = {
@@ -63,77 +51,16 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#FAFBFC' },
-    { media: '(prefers-color-scheme: dark)', color: '#0A0E13' },
-  ],
+  themeColor: '#050505',
 };
 
 export const metadata: Metadata = {
   title: {
-    default: 'CineAesthete - Discover Movies by Vibe',
+    default: 'CineAesthete - Digital Theater',
     template: '%s | CineAesthete',
   },
   description:
-    "The world's first aesthetic-based movie discovery platform. Search for films by visual vibes, mood, and cinematic atmosphere. Powered by AI.",
-  keywords: [
-    'movies',
-    'aesthetic search',
-    'vibe-based',
-    'film discovery',
-    'recommendations',
-    'AI-powered',
-    'cinematic',
-  ],
-  authors: [{ name: 'CineAesthete Team' }],
-  creator: 'CineAesthete',
-  publisher: 'CineAesthete',
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  openGraph: {
-    type: 'website',
-    locale: 'en_US',
-    url: 'https://cineaesthete.com',
-    title: 'CineAesthete - Discover Movies by Vibe',
-    description:
-      'Search for movies by aesthetic vibes and visual atmosphere. AI-powered film discovery platform.',
-    siteName: 'CineAesthete',
-    images: [
-      {
-        url: '/og-image.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'CineAesthete',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'CineAesthete - Discover Movies by Vibe',
-    description:
-      'Search for movies by aesthetic vibes and visual atmosphere. AI-powered film discovery.',
-    images: ['/og-image.jpg'],
-    creator: '@cineaesthete',
-  },
-  icons: {
-    icon: [
-      { url: '/favicon.ico' },
-      { url: '/icon.png', type: 'image/png', sizes: '32x32' },
-    ],
-    apple: [
-      { url: '/apple-icon.png', sizes: '180x180', type: 'image/png' },
-    ],
-  },
-  manifest: '/manifest.json',
+    "Experience cinema through a digital lens. Discovery reimagined.",
 };
 
 export default function RootLayout({
@@ -144,30 +71,47 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${sfPro.variable} ${bebasNeue.variable} ${jetbrainsMono.variable}`}
+      className={`${manrope.variable} ${inter.variable} ${bebasNeue.variable} ${jetbrainsMono.variable}`}
       suppressHydrationWarning
     >
-      <body className="bg-background font-body text-text-primary antialiased">
-        <Providers>
-          <div className="relative flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              duration: 4000,
-              className: 'glass-heavy border-border',
-              style: {
-                background: 'rgba(255, 255, 255, 0.12)',
-                backdropFilter: 'blur(24px)',
-                border: '1px solid rgba(255, 255, 255, 0.1)',
-                color: '#F8F9FA',
-              },
-            }}
-          />
-        </Providers>
+      <body className="bg-void font-body text-text-primary antialiased selection:bg-klein-blue selection:text-white overflow-x-hidden">
+        <SmoothScrolling>
+          <Providers>
+            {/* Atmospheric Layers */}
+            <CinematicBackground />
+            <div className="film-grain" />
+            <CustomCursor />
+
+            {/* Content Layer */}
+            <div className="relative z-10 flex min-h-screen flex-col pb-24"> {/* Added padding bottom for Dock */}
+              <div className="hidden md:block">
+                {/* Optional: We can hide the full header on desktop if we want only the dock, but keeping it for now for Auth/Logo is safer unless we refactor Header completely. 
+                     The USER request was "Implement Bottom Dock". Let's keep Header visible for now to avoid breaking Auth flow, but maybe minimal. 
+                     Let's leave Header as is. It acts as a top bar. 
+                 */}
+                <Header />
+              </div>
+              {/* Mobile Header is handled inside Header component logic (it shows menu button on mobile) */}
+
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
+
+            {/* The Dock - Fixed Bottom */}
+            <Dock />
+
+            <Toaster
+              position="bottom-right"
+              toastOptions={{
+                duration: 4000,
+                className: '!bg-void-deep !border-white/10 !text-white',
+                style: {
+                  backdropFilter: 'blur(12px)',
+                },
+              }}
+            />
+          </Providers>
+        </SmoothScrolling>
       </body>
     </html>
   );

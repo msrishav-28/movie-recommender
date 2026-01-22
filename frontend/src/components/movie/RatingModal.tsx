@@ -61,7 +61,7 @@ export function RatingModal({
         {/* Overall Rating */}
         <div>
           <label className="block text-sm font-medium mb-3">
-            Overall Rating <span className="text-brand-primary">*</span>
+            Overall Rating <span className="text-klein-blue">*</span>
           </label>
           <div className="flex items-center gap-4">
             <Slider
@@ -72,7 +72,7 @@ export function RatingModal({
               step={0.5}
             />
             <div className="flex items-center gap-1 min-w-[60px]">
-              <Star className="h-5 w-5 fill-brand-tertiary text-brand-tertiary" />
+              <Star className="h-5 w-5 fill-cinema-gold text-cinema-gold" />
               <span className="text-xl font-bold">{overallRating.toFixed(1)}</span>
             </div>
           </div>

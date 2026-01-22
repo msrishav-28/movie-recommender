@@ -44,7 +44,7 @@ export function ReviewForm({ movieId, ratingId, onSuccess, onCancel }: ReviewFor
       await ratingService.createReview(data);
       toast.success('Review posted successfully!');
       onSuccess?.();
-      
+
       // Reset form
       setTitle('');
       setContent('');
@@ -61,7 +61,7 @@ export function ReviewForm({ movieId, ratingId, onSuccess, onCancel }: ReviewFor
     <Card variant="glass">
       <CardContent className="p-6">
         <div className="flex items-center gap-2 mb-4">
-          <MessageSquare className="h-5 w-5 text-brand-primary" />
+          <MessageSquare className="h-5 w-5 text-klein-blue" />
           <h3 className="text-lg font-semibold">Write a Review</h3>
         </div>
 
@@ -80,17 +80,17 @@ export function ReviewForm({ movieId, ratingId, onSuccess, onCancel }: ReviewFor
           {/* Content */}
           <div>
             <label className="block text-sm font-medium mb-2">
-              Review <span className="text-brand-primary">*</span>
+              Review <span className="text-klein-blue">*</span>
             </label>
             <textarea
-              className="w-full px-4 py-3 bg-surface/50 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/50 text-text-primary placeholder-text-tertiary min-h-[120px] resize-y"
+              className="w-full px-4 py-3 bg-void-deep/50 border border-white/10 rounded-lg focus:outline-none focus:ring-2 focus:ring-klein-blue/50 text-text-primary placeholder:text-white/40 min-h-[120px] resize-y"
               placeholder="Share your thoughts about this movie..."
               value={content}
               onChange={(e) => setContent(e.target.value)}
               minLength={10}
               required
             />
-            <p className="text-xs text-text-tertiary mt-1">
+            <p className="text-xs text-white/40 mt-1">
               {content.length < 10
                 ? `At least ${10 - content.length} more characters needed`
                 : `${content.length} characters`}
@@ -98,15 +98,15 @@ export function ReviewForm({ movieId, ratingId, onSuccess, onCancel }: ReviewFor
           </div>
 
           {/* Spoiler Warning */}
-          <div className="flex items-start gap-3 p-4 bg-warning/10 border border-warning/20 rounded-lg">
-            <AlertTriangle className="h-5 w-5 text-warning shrink-0 mt-0.5" />
+          <div className="flex items-start gap-3 p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+            <AlertTriangle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
             <div className="flex-1">
               <Checkbox
                 label="This review contains spoilers"
                 checked={isSpoiler}
                 onChange={setIsSpoiler}
               />
-              <p className="text-xs text-text-tertiary mt-1">
+              <p className="text-xs text-white/40 mt-1">
                 Check this if your review reveals major plot points
               </p>
             </div>

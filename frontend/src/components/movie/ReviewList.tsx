@@ -24,13 +24,13 @@ export function ReviewList({ movieId }: ReviewListProps) {
     try {
       setIsLoading(true);
       const data = await ratingService.getMovieReviews(movieId, page, 10);
-      
+
       if (page === 1) {
         setReviews(data);
       } else {
         setReviews((prev) => [...prev, ...data]);
       }
-      
+
       setHasMore(data.length === 10);
     } catch (error) {
       console.error('Failed to load reviews:', error);
@@ -52,7 +52,7 @@ export function ReviewList({ movieId }: ReviewListProps) {
   if (isLoading && page === 1) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader className="h-8 w-8 animate-spin text-brand-primary" />
+        <Loader className="h-8 w-8 animate-spin text-klein-blue" />
       </div>
     );
   }
@@ -60,7 +60,7 @@ export function ReviewList({ movieId }: ReviewListProps) {
   if (reviews.length === 0) {
     return (
       <div className="text-center py-12">
-        <MessageSquare className="h-12 w-12 text-text-tertiary mx-auto mb-4" />
+        <MessageSquare className="h-12 w-12 text-white/40 mx-auto mb-4" />
         <p className="text-text-secondary">No reviews yet. Be the first to review!</p>
       </div>
     );

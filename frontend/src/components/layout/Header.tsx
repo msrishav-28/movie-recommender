@@ -21,12 +21,12 @@ export function Header() {
   ];
 
   return (
-    <header className="sticky top-0 z-sticky glass-heavy backdrop-blur-lg border-b border-border safe-top">
+    <header className="sticky top-0 z-[100] glass-heavy border-b border-white/10 safe-top">
       <div className="container-padding">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
-            <Film className="h-8 w-8 text-brand-primary group-hover:scale-110 transition-transform" />
+            <Film className="h-8 w-8 text-klein-blue group-hover:scale-110 transition-transform" />
             <span className="font-cinematic text-2xl tracking-wider hidden sm:inline">
               CINEAESTHETE
             </span>
@@ -39,7 +39,7 @@ export function Header() {
                 key={link.href}
                 href={link.href}
                 className={cn(
-                  'text-sm font-medium transition-colors hover:text-brand-primary',
+                  'text-sm font-medium transition-colors hover:text-klein-blue',
                   pathname === link.href ? 'text-text-primary' : 'text-text-secondary'
                 )}
               >
@@ -70,7 +70,7 @@ export function Header() {
                     Watchlist
                   </Button>
                 </Link>
-                <div className="flex items-center gap-2 ml-2 pl-2 border-l border-border">
+                <div className="flex items-center gap-2 ml-2 pl-2 border-l border-white/10">
                   <Link href="/profile">
                     <Button variant="ghost" size="sm" icon={<User className="h-4 w-4" />}>
                       {user?.username}

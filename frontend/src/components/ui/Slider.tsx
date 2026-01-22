@@ -76,7 +76,7 @@ export function Slider({
         <div className="flex items-center justify-between">
           {label && <label className="text-sm font-medium">{label}</label>}
           {showValue && (
-            <span className="text-sm font-medium text-brand-primary">{currentValue}</span>
+            <span className="text-sm font-medium text-klein-blue">{currentValue}</span>
           )}
         </div>
       )}
@@ -84,23 +84,23 @@ export function Slider({
       <div
         ref={sliderRef}
         className={cn(
-          'relative h-2 rounded-full bg-glass-medium cursor-pointer',
+          'relative h-2 rounded-full bg-white/10 cursor-pointer',
           disabled && 'opacity-50 cursor-not-allowed'
         )}
         onMouseDown={handleMouseDown}
       >
         {/* Progress */}
         <div
-          className="absolute h-full rounded-full bg-brand-primary transition-all"
+          className="absolute h-full rounded-full bg-klein-blue transition-all shadow-[0_0_10px_rgba(0,47,167,0.5)]"
           style={{ width: `${percentage}%` }}
         />
 
         {/* Thumb */}
         <div
           className={cn(
-            'absolute top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-brand-primary border-2 border-white shadow-lg',
+            'absolute top-1/2 -translate-y-1/2 w-5 h-5 rounded-full bg-white border-2 border-klein-blue shadow-[0_0_15px_rgba(0,47,167,0.8)]',
             'transition-transform hover:scale-110',
-            isDragging.current && 'scale-125'
+            isDragging.current && 'scale-125 ring-2 ring-klein-blue/30'
           )}
           style={{ left: `calc(${percentage}% - 10px)` }}
         />

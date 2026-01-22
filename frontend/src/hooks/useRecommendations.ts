@@ -31,7 +31,7 @@ export function useAestheticRecommendations(query: string, limit: number = 12) {
 export function useColdStartRecommendations(genres?: string[], moods?: string[]) {
   return useQuery({
     queryKey: [QUERY_KEYS.RECOMMENDATIONS, 'cold-start', genres, moods],
-    queryFn: () => recommendationService.getColdStartRecommendations(genres, moods),
+    queryFn: () => recommendationService.getColdStartRecommendations({ genres, moods }),
     staleTime: CACHE_DURATION.MEDIUM * 1000,
   });
 }

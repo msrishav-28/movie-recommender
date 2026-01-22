@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { MovieGrid } from '@/components/movie/MovieGrid';
+import { MasonryGrid } from '@/components/ui/MasonryGrid';
+import { Dropdown } from '@/components/ui/Dropdown';
 import { useInfiniteMovies } from '@/hooks/useMovies';
 import { useInView } from 'react-intersection-observer';
 import { useEffect } from 'react';
@@ -35,116 +36,124 @@ export default function BrowsePage() {
   };
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-void">
       {/* Header Section */}
-      <section className="bg-surface/50 border-b border-border">
-        <div className="container-padding py-8">
-          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-6">
+      <section className="bg-void/80 border-b border-white/5 backdrop-blur-md sticky top-[64px] z-30 shadow-lg">
+        <div className="container-padding py-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
             <div>
-              <h1 className="text-4xl font-bold mb-2">Browse Movies</h1>
-              <p className="text-text-secondary">
-                Discover {data?.pages[0]?.total.toLocaleString() || '...'} movies
+              <h1 className="text-3xl md:text-4xl font-bold mb-2 font-headline leading-none">Browse Movies</h1>
+              <p className="text-text-secondary font-mono text-sm">
+                Discover {data?.pages[0]?.total.toLocaleString() || 'thousands of'} movies
               </p>
             </div>
 
-            <Button
-              variant="outline"
-              icon={<SlidersHorizontal className="h-5 w-5" />}
-              onClick={() => setShowFilters(!showFilters)}
-            >
-              {showFilters ? 'Hide' : 'Show'} Filters
-            </Button>
-          </div>
-
-          {/* Search Bar */}
-          <form onSubmit={handleSearch} className="max-w-2xl">
-            <Input
-              type="search"
-              placeholder="Search for movies..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              prefix={<Search className="h-5 w-5" />}
-              showClearButton
-              onClear={() => {
-                setSearchQuery('');
-                setFilters({ ...filters, query: '' });
-              }}
-            />
-          </form>
-        </div>
-      </section>
-
-      {/* Filter Sidebar (Collapsible) */}
-      {showFilters && (
-        <section className="bg-surface border-b border-border">
-          <div className="container-padding py-6">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              {/* Genre Filter */}
-              <div>
-                <label className="text-sm font-medium mb-2 block">Genre</label>
-                <select className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm">
-                  <option value="">All Genres</option>
-                  <option value="28">Action</option>
-                  <option value="35">Comedy</option>
-                  <option value="18">Drama</option>
-                  <option value="27">Horror</option>
-                  <option value="878">Sci-Fi</option>
-                </select>
-              </div>
-
-              {/* Year Filter */}
-              <div>
-                <label className="text-sm font-medium mb-2 block">Year</label>
-                <select className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm">
-                  <option value="">All Years</option>
-                  <option value="2024">2024</option>
-                  <option value="2023">2023</option>
-                  <option value="2022">2022</option>
-                  <option value="2021">2021</option>
-                  <option value="2020">2020</option>
-                </select>
-              </div>
-
-              {/* Rating Filter */}
-              <div>
-                <label className="text-sm font-medium mb-2 block">Min Rating</label>
-                <select className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm">
-                  <option value="">Any</option>
-                  <option value="7">7+</option>
-                  <option value="8">8+</option>
-                  <option value="9">9+</option>
-                </select>
-              </div>
-
-              {/* Sort By */}
-              <div>
-                <label className="text-sm font-medium mb-2 block">Sort By</label>
-                <select className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm">
-                  <option value="popularity">Popularity</option>
-                  <option value="rating">Rating</option>
-                  <option value="release_date">Release Date</option>
-                  <option value="title">Title</option>
-                </select>
-              </div>
+            <div className="flex items-center gap-3 w-full md:w-auto">
+              <form onSubmit={handleSearch} className="flex-1 md:w-80">
+                <Input
+                  type="search"
+                  placeholder="Search titles..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  prefix={<Search className="h-4 w-4" />}
+                  showClearButton
+                  onClear={() => {
+                    setSearchQuery('');
+                    setFilters({ ...filters, query: '' });
+                  }}
+                  className="bg-white/5 border-white/10"
+                />
+              </form>
+              <Button
+                variant={showFilters ? 'primary' : 'outline'}
+                icon={<SlidersHorizontal className="h-4 w-4" />}
+                onClick={() => setShowFilters(!showFilters)}
+                size="md"
+              >
+                Filters
+              </Button>
             </div>
           </div>
-        </section>
-      )}
+
+          {/* Filter Sidebar (Collapsible) */}
+          {showFilters && (
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 animate-fade-in pt-4 border-t border-white/5">
+              <Dropdown
+                label="Genre"
+                placeholder="All Genres"
+                options={[
+                  { value: '', label: 'All Genres' },
+                  { value: '28', label: 'Action' },
+                  { value: '35', label: 'Comedy' },
+                  { value: '18', label: 'Drama' },
+                  { value: '27', label: 'Horror' },
+                  { value: '878', label: 'Sci-Fi' },
+                ]}
+                value={filters.genres?.[0] || ''}
+                onChange={(val) => setFilters({ ...filters, genres: val ? [val] : undefined })}
+              />
+
+              <Dropdown
+                label="Year"
+                placeholder="All Years"
+                options={[
+                  { value: '', label: 'All Years' },
+                  { value: '2024', label: '2024' },
+                  { value: '2023', label: '2023' },
+                  { value: '2022', label: '2022' },
+                  { value: '2021', label: '2021' },
+                  { value: '2020', label: '2020' },
+                ]}
+                value={filters.min_year?.toString()}
+                onChange={(val) => setFilters({
+                  ...filters,
+                  min_year: val ? parseInt(val) : undefined,
+                  max_year: val ? parseInt(val) : undefined
+                })}
+              />
+
+              <Dropdown
+                label="Min Rating"
+                placeholder="Any"
+                options={[
+                  { value: '', label: 'Any' },
+                  { value: '7', label: '7+' },
+                  { value: '8', label: '8+' },
+                  { value: '9', label: '9+' },
+                ]}
+                value={filters.min_rating?.toString()}
+                onChange={(val) => setFilters({ ...filters, min_rating: val ? parseInt(val) : undefined })}
+              />
+
+              <Dropdown
+                label="Sort By"
+                options={[
+                  { value: 'popularity', label: 'Popularity' },
+                  { value: 'rating', label: 'Rating' },
+                  { value: 'release_date', label: 'Release Date' },
+                  { value: 'title', label: 'Title' },
+                ]}
+                value={filters.sort_by || 'popularity'}
+                onChange={(val) => setFilters({ ...filters, sort_by: val as any })}
+              />
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* Movies Grid */}
       <section className="section-spacing">
         <div className="container-padding">
-          <MovieGrid movies={movies} isLoading={isLoading} size="medium" />
+          <MasonryGrid items={movies} />
+          {isLoading && movies.length === 0 && (
+            <div className="text-center py-20 text-text-secondary">Loading movies...</div>
+          )}
 
           {/* Load More Trigger */}
           {hasNextPage && (
-            <div ref={ref} className="flex justify-center py-8">
-              {isFetchingNextPage ? (
-                <div className="animate-spin h-8 w-8 border-4 border-brand-primary border-t-transparent rounded-full" />
-              ) : (
-                <Button onClick={() => fetchNextPage()} variant="outline">
-                  Load More
-                </Button>
+            <div ref={ref} className="flex justify-center py-12">
+              {isFetchingNextPage && (
+                <div className="animate-spin h-8 w-8 border-4 border-klein-blue border-t-transparent rounded-full" />
               )}
             </div>
           )}

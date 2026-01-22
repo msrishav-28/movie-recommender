@@ -3,10 +3,10 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Play, Plus, Info, Check, Star, Clock } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Play, Plus, Info, Star } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import type { Movie } from '@/types';
-import { getTmdbImageUrl, extractYear, formatRuntime } from '@/lib/utils';
+import { getTmdbImageUrl, extractYear } from '@/lib/utils';
 import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
@@ -21,197 +21,25 @@ export interface MovieCardProps {
   isInWatchlist?: boolean;
   priority?: boolean;
   index?: number;
+  dimmed?: boolean; // New prop for Lights Out effect
+  onHover?: (isHovered: boolean) => void;
 }
 
 export function MovieCard({
   movie,
   size = 'medium',
-  tilt3D = true,
+  tilt3D = true, // Maintained for legacy compatibility but disabled visually if needed
   showQuickActions = true,
   matchScore,
   onWatchlistToggle,
   isInWatchlist = false,
   priority = false,
   index = 0,
+  dimmed = false,
+  onHover,
 }: MovieCardProps) {
   const [isHovered, setIsHovered] = useState(false);
-  const [tiltStyle, setTiltStyle] = useState({});
 
-  const sizes = {
-    small: { width: 160, height: 240, fontSize: 'text-xs' },
-    medium: { width: 220, height: 330, fontSize: 'text-sm' },
-    large: { width: 280, height: 420, fontSize: 'text-base' },
-  };
-
-  const cardSize = sizes[size];
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!tilt3D) return;
-
-    const card = e.currentTarget;
-    const rect = card.getBoundingClientRect();
-    const x = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
-    const y = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
-
-    setTiltStyle({
-      transform: `perspective(1000px) rotateX(${x * -7}deg) rotateY(${y * 7}deg)`,
-      transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-    setTiltStyle({
-      transform: 'perspective(1000px) rotateX(0deg) rotateY(0deg)',
-      transition: 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)',
-    });
-  };
-
-  const handleWatchlistClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onWatchlistToggle?.(movie.id);
-  };
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.4,
-        delay: index * 0.05,
-        ease: 'easeOut',
-      }}
-      style={{ width: cardSize.width }}
-      className="group relative"
-    >
-      <Link href={`/movie/${movie.id}`}>
-        <div
-          className="relative overflow-hidden rounded-lg gpu-accelerated preserve-3d"
-          style={{
-            ...tiltStyle,
-            height: cardSize.height,
-          }}
-          onMouseMove={handleMouseMove}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={handleMouseLeave}
-        >
-          {/* Poster Image */}
-          <div className="relative h-full w-full">
-            <Image
-              src={getTmdbImageUrl(movie.poster_path, 'w500')}
-              alt={movie.title}
-              fill
-              className="object-cover"
-              sizes={`${cardSize.width}px`}
-              priority={priority}
-            />
-
-            {/* Match Score Badge (for aesthetic search results) */}
-            {matchScore !== undefined && (
-              <div className="absolute right-2 top-2 z-10">
-                <Badge variant="success" size="sm" className="glass-heavy backdrop-blur-md font-bold">
-                  {Math.round(matchScore)}% Match
-                </Badge>
-              </div>
-            )}
-
-            {/* Hover Overlay */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: isHovered ? 1 : 0 }}
-              transition={{ duration: 0.3 }}
-              className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-background/20 z-10"
-            >
-              {showQuickActions && (
-                <div className="absolute inset-0 flex items-center justify-center gap-3 z-20">
-                  <Button
-                    variant="glass"
-                    size="sm"
-                    icon={<Play className="h-4 w-4" />}
-                    className="hover:scale-110 transition-transform"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      // Play trailer
-                    }}
-                  />
-                  <Button
-                    variant="glass"
-                    size="sm"
-                    icon={isInWatchlist ? <Check className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
-                    className={cn(
-                      'hover:scale-110 transition-transform',
-                      isInWatchlist && 'bg-brand-primary-light text-brand-primary'
-                    )}
-                    onClick={handleWatchlistClick}
-                  />
-                  <Button
-                    variant="glass"
-                    size="sm"
-                    icon={<Info className="h-4 w-4" />}
-                    className="hover:scale-110 transition-transform"
-                  />
-                </div>
-              )}
-
-              {/* Info Panel at Bottom */}
-              <div className="absolute bottom-0 left-0 right-0 p-3 space-y-2">
-                {/* Genres */}
-                {movie.genres && movie.genres.length > 0 && (
-                  <div className="flex gap-1.5">
-                    {movie.genres.slice(0, 2).map((genre) => (
-                      <Badge key={genre.id} variant="default" size="sm" className="glass-light">
-                        {genre.name}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
-
-                {/* Runtime & Rating */}
-                <div className="flex items-center gap-3 text-xs text-text-tertiary">
-                  {movie.runtime && (
-                    <span className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      {formatRuntime(movie.runtime)}
-                    </span>
-                  )}
-                  {movie.vote_average && movie.vote_average > 0 && (
-                    <span className="flex items-center gap-1 text-brand-tertiary">
-                      <Star className="h-3 w-3 fill-current" />
-                      {movie.vote_average.toFixed(1)}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Card Footer */}
-          <div className="absolute bottom-0 left-0 right-0 bg-surface border-t border-border p-3 z-0">
-            <h3 className={cn('font-semibold text-text-primary truncate-2', cardSize.fontSize)}>
-              {movie.title}
-            </h3>
-            <div className="flex items-center justify-between mt-1">
-              <span className="text-xs text-text-tertiary">
-                {movie.release_date ? extractYear(movie.release_date) : 'N/A'}
-              </span>
-              {movie.vote_average && movie.vote_average > 0 && !isHovered && (
-                <span className="flex items-center gap-1 text-xs text-brand-tertiary">
-                  <Star className="h-3 w-3 fill-current" />
-                  {movie.vote_average.toFixed(1)}
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-      </Link>
-    </motion.div>
-  );
-}
-
-// Skeleton loader for MovieCard
-export function MovieCardSkeleton({ size = 'medium' }: { size?: 'small' | 'medium' | 'large' }) {
   const sizes = {
     small: { width: 160, height: 240 },
     medium: { width: 220, height: 330 },
@@ -220,16 +48,110 @@ export function MovieCardSkeleton({ size = 'medium' }: { size?: 'small' | 'mediu
 
   const cardSize = sizes[size];
 
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+    onHover?.(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    onHover?.(false);
+  };
+
   return (
-    <div style={{ width: cardSize.width }}>
-      <div
-        className="skeleton-shimmer rounded-lg"
-        style={{ height: cardSize.height }}
-      />
-      <div className="mt-2 space-y-2">
-        <div className="skeleton-shimmer h-4 w-3/4 rounded" />
-        <div className="skeleton-shimmer h-3 w-1/2 rounded" />
-      </div>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{
+        opacity: dimmed ? 0.3 : 1,
+        scale: isHovered ? 1.05 : (dimmed ? 0.98 : 1),
+        filter: dimmed ? 'grayscale(100%)' : 'grayscale(0%)',
+      }}
+      transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      className={cn("group relative block", dimmed && "pointer-events-none")}
+      style={{ width: '100%', aspectRatio: '2/3' }} // Responsive aspect ratio
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      <Link href={`/movie/${movie.id}`} className="block w-full h-full">
+        <div className="relative w-full h-full overflow-hidden rounded-none sm:rounded-lg bg-void-deep border border-white/5">
+
+          {/* Image Layer */}
+          <div className="absolute inset-0 w-full h-full transform transition-transform duration-700 ease-out group-hover:scale-110">
+            <Image
+              src={getTmdbImageUrl(movie.poster_path, 'w500')}
+              alt={movie.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 50vw, 33vw"
+              priority={priority}
+            />
+          </div>
+
+          {/* Match Score Badge (Electric Teal) */}
+          {matchScore !== undefined && (
+            <div className="absolute right-2 top-2 z-20">
+              <div className="px-2 py-1 bg-black/50 backdrop-blur-md border border-electric-teal/50 rounded flex items-center gap-1 shadow-[0_0_15px_rgba(0,217,255,0.3)]">
+                <div className="w-1.5 h-1.5 rounded-full bg-electric-teal animate-pulse" />
+                <span className="text-xs font-mono font-bold text-electric-teal">{Math.round(matchScore)}%</span>
+              </div>
+            </div>
+          )}
+
+          {/* Gradient Overlay (Always present but subtle, intensifies on hover) */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-90 transition-opacity duration-500" />
+
+          {/* Content Layer (Reveals on Hover) */}
+          <div className="absolute inset-0 flex flex-col justify-end p-4 z-20">
+
+            {/* Title & Meta - Slides Up */}
+            <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out">
+              <h3 className="font-headline font-bold text-xl leading-tight text-white mb-1 drop-shadow-md">
+                {movie.title}
+              </h3>
+
+              <div className="flex items-center gap-3 text-xs font-mono text-text-tech opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-75">
+                <span>{movie.release_date ? extractYear(movie.release_date) : 'UNKNOWN'}</span>
+                <span className="text-white/20">|</span>
+                <div className="flex items-center gap-1">
+                  <Star className="w-3 h-3 text-cinema-gold fill-current" />
+                  <span className="text-cinema-gold">{movie.vote_average?.toFixed(1) || '0.0'}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Actions (Optional, appear on hover) */}
+            {showQuickActions && (
+              <div className="mt-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100 transform translate-y-4 group-hover:translate-y-0">
+                <Button size="sm" className="bg-white text-black hover:bg-white/90 border-none font-bold">
+                  <Play className="w-4 h-4 mr-1 fill-current" /> WATCH
+                </Button>
+                <Button
+                  size="sm"
+                  variant="glass"
+                  className="border-white/20 hover:border-white text-white"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onWatchlistToggle?.(movie.id);
+                  }}
+                >
+                  <Plus className={cn("w-4 h-4", isInWatchlist && "rotate-45")} />
+                </Button>
+              </div>
+            )}
+          </div>
+
+        </div>
+      </Link>
+    </motion.div>
+  );
+}
+
+// Skeleton loader
+export function MovieCardSkeleton({ size }: { size?: 'small' | 'medium' | 'large' }) {
+  return (
+    <div className="block w-full aspect-[2/3] rounded-lg bg-white/5 animate-pulse relative overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent animate-[shimmer_2s_infinite]" />
     </div>
   );
 }
+

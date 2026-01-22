@@ -34,8 +34,8 @@ export function Tabs({ tabs, defaultTab, onChange, variant = 'default' }: TabsPr
       <div
         className={cn(
           'flex items-center gap-1',
-          variant === 'default' && 'border-b border-border',
-          variant === 'pills' && 'glass-light rounded-lg p-1'
+          variant === 'default' && 'border-b border-white/10',
+          variant === 'pills' && 'bg-white/5 rounded-lg p-1'
         )}
       >
         {tabs.map((tab) => (
@@ -49,14 +49,14 @@ export function Tabs({ tabs, defaultTab, onChange, variant = 'default' }: TabsPr
               variant === 'default' && [
                 'border-b-2 -mb-px',
                 activeTab === tab.id
-                  ? 'border-brand-primary text-brand-primary'
-                  : 'border-transparent text-text-secondary hover:text-text-primary',
+                  ? 'border-electric-teal text-electric-teal shadow-[0_10px_20px_-10px_rgba(0,217,255,0.5)]'
+                  : 'border-transparent text-text-secondary hover:text-white',
               ],
               variant === 'pills' && [
                 'rounded-md',
                 activeTab === tab.id
-                  ? 'bg-brand-primary text-white shadow-md'
-                  : 'text-text-secondary hover:bg-glass-medium',
+                  ? 'bg-klein-blue text-white shadow-md glow-primary'
+                  : 'text-text-secondary hover:bg-white/5',
               ]
             )}
           >

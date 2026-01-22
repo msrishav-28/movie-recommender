@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Movie } from '@/types';
 import { MovieCard, MovieCardSkeleton } from './MovieCard';
 
@@ -18,6 +19,8 @@ export function MovieGrid({
   onWatchlistToggle,
   watchlistMovieIds = new Set(),
 }: MovieGridProps) {
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
   if (isLoading) {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
@@ -32,13 +35,13 @@ export function MovieGrid({
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <p className="text-lg text-text-secondary">No movies found</p>
-        <p className="text-sm text-text-tertiary mt-2">Try adjusting your search or filters</p>
+        <p className="text-sm text-white/40 mt-2">Try adjusting your search or filters</p>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6">
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6" onMouseLeave={() => setHoveredIndex(null)}>
       {movies.map((movie, index) => (
         <MovieCard
           key={movie.id}
@@ -48,6 +51,9 @@ export function MovieGrid({
           onWatchlistToggle={onWatchlistToggle}
           isInWatchlist={watchlistMovieIds.has(movie.id)}
           index={index}
+          // Lights Out Logic
+          dimmed={hoveredIndex !== null && hoveredIndex !== index}
+          onHover={(isHovered) => setHoveredIndex(isHovered ? index : null)}
         />
       ))}
     </div>

@@ -45,39 +45,34 @@ export const userService = {
    * Get current user's profile
    */
   async getMyProfile(): Promise<UserProfile> {
-    const response = await apiClient.get('/users/me/profile');
-    return response.data;
+    return await apiClient.get<UserProfile>('/users/me/profile');
   },
 
   /**
    * Update current user's profile
    */
   async updateProfile(data: UpdateProfileRequest): Promise<UserProfile> {
-    const response = await apiClient.put('/users/me/profile', data);
-    return response.data;
+    return await apiClient.put<UserProfile>('/users/me/profile', data);
   },
 
   /**
    * Get current user's preferences
    */
   async getMyPreferences(): Promise<UserPreferences> {
-    const response = await apiClient.get('/users/me/preferences');
-    return response.data;
+    return await apiClient.get<UserPreferences>('/users/me/preferences');
   },
 
   /**
    * Update current user's preferences
    */
   async updatePreferences(data: UpdatePreferencesRequest): Promise<UserPreferences> {
-    const response = await apiClient.put('/users/me/preferences', data);
-    return response.data;
+    return await apiClient.put<UserPreferences>('/users/me/preferences', data);
   },
 
   /**
    * Get public user profile by username
    */
   async getUserProfile(username: string): Promise<UserProfile> {
-    const response = await apiClient.get(`/users/${username}`);
-    return response.data;
+    return await apiClient.get<UserProfile>(`/users/${username}`);
   },
 };

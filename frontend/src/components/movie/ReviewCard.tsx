@@ -42,7 +42,7 @@ export function ReviewCard({ review, onLike }: ReviewCardProps) {
             {review.title && (
               <h4 className="font-semibold text-lg mb-1">{review.title}</h4>
             )}
-            <div className="flex items-center gap-2 text-sm text-text-tertiary">
+            <div className="flex items-center gap-2 text-sm text-white/40">
               <span>{review.user?.username || 'Anonymous'}</span>
               <span>•</span>
               <span>{formatDistanceToNow(review.created_at)}</span>
@@ -59,10 +59,10 @@ export function ReviewCard({ review, onLike }: ReviewCardProps) {
 
         {/* Spoiler Warning */}
         {review.is_spoiler && !showSpoiler && (
-          <div className="p-4 bg-warning/10 border border-warning/20 rounded-lg mb-4">
+          <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-lg mb-4">
             <div className="flex items-center gap-2 mb-2">
-              <AlertTriangle className="h-5 w-5 text-warning" />
-              <p className="font-medium text-warning">Spoiler Warning</p>
+              <AlertTriangle className="h-5 w-5 text-amber-500" />
+              <p className="font-medium text-amber-500">Spoiler Warning</p>
             </div>
             <p className="text-sm text-text-secondary mb-3">
               This review contains spoilers. Click to reveal.
